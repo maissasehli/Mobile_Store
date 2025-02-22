@@ -36,8 +36,10 @@ dependencies:
   app_links: ^6.3.3
   email_validator: ^3.0.0
   get: ^4.6.6
+  shared_preferences: 2.5.2 
 
   cupertino_icons: ^1.0.8
+  flutter_otp_text_field: ^1.4.0+2
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +71,7 @@ flutter:
      - assets/onBordingImage/shop_cart.png 
      - assets/onBordingImage/shop_payment.png
      - assets/onBordingImage/shop_store.png
+     - assets/logo/logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
