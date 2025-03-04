@@ -1,79 +1,55 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:storee/bindings/biending.dart';
+import 'package:storee/core/localization/changelocal.dart';
+import 'package:storee/core/localization/translation.dart';
+import 'package:storee/core/services/services.dart';
+import 'package:storee/routes.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:app_links/app_links.dart';
-import 'package:storee/routes/app_pages.dart';
 import 'dart:async';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 // Global Supabase client instance
-final supabase = Supabase.instance.client;
-
 Future<void> main() async {
-  // Ensure Flutter bindings are initialized
   WidgetsFlutterBinding.ensureInitialized();
-  
+
+  // Register MyServices asynchronously before running the app
+  await Get.putAsync(() async => await MyServices().init());
+
+  // Load environment variables
+  await dotenv.load(fileName: ".env");
+
   // Initialize Supabase
   await Supabase.initialize(
-    url: 'https://zzklwsqmodwlpboowpym.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp6a2x3c3Ftb2R3bHBib293cHltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk1NTQ1ODgsImV4cCI6MjA1NTEzMDU4OH0.ESdYUM-R3L2iv6QIMQuCJRwzYK5mP6_loy2OOSUW2dI',
-    debug: true
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+    debug: true,
   );
-
-  // Initialize deep link handling
-  await initAppLinks();
 
   runApp(const MyApp());
 }
 
-// Initialize and configure deep link handling
-Future<void> initAppLinks() async {
-  final appLinks = AppLinks();
-
-  // Check initial deep link
-  try {
-    final Uri? initialLink = await appLinks.getInitialLink();
-    if (initialLink != null) {
-      handleDeepLink(initialLink);
-    }
-  } catch (e) {
-    print('Error retrieving initial link: $e');
-  }
-
-  // Listen for incoming links
-  appLinks.uriLinkStream.listen(
-    (Uri? uri) {
-      if (uri != null) {
-        handleDeepLink(uri);
-      }
-    },
-    onError: (err) {
-      print('Error processing link: $err');
-    }
-  );
-}// Handle deep links with GetX navigation
-void handleDeepLink(Uri uri) {
-  print("Deep link received: ${uri.toString()}");
-  
-  if (uri.host == 'reset-callback') {
-    Get.toNamed(Routes.UPDATE_PASSWORD);
-  }
-}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    LocaleController controller = Get.put(LocaleController());
     return GetMaterialApp(
+      translations:MyTranslation() ,
       debugShowCheckedModeBanner: false,
       title: 'StoreGo',
+      locale:controller.language,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: Routes.ONBOARDING,
-      getPages: AppPages.routes,
+      initialBinding:MyBinding() ,
+      //routes: routes,
+      getPages: routes,
     );
   }
 }

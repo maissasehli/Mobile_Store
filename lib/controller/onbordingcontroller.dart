@@ -1,11 +1,15 @@
 // lib/controller/onboardingcontroller.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:storee/core/constants/routes.dart';
+import 'package:storee/core/services/services.dart';
 import 'package:storee/data/datasource/static/onbording_static.dart';
 
 class OnboardingController extends GetxController {
   late PageController pageController;
   var currentPage = 0.obs;
+
+  MyServices myServices = Get.find();
 
   final int pageCount = OnboardingStatic.pages.length;
 
@@ -25,6 +29,7 @@ class OnboardingController extends GetxController {
 
   void nextPage() {
     if (currentPage.value < pageCount - 1) {
+      myServices.sharedPreferences.setString("onboarding", "1");
       pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -38,6 +43,6 @@ class OnboardingController extends GetxController {
 
   void navigateToLogin() {
     // Implement your navigation logic here
-    Get.offAllNamed('/login');
+    Get.offAllNamed(AppRoute.login);
   }
 }
