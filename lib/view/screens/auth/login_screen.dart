@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:storee/controller/login_controller.dart';
+import 'package:storee/controller/auth/login_controller.dart';
+import 'package:storee/controller/auth/google_auth_controller.dart'; // Import the Google auth controller
 import 'package:storee/core/constants/color.dart';
 import 'package:storee/core/constants/imageasset.dart';
 import 'package:storee/core/functions/alertexitapp.dart';
@@ -17,6 +18,9 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Initialize and get Google auth controller
+    final GoogleAuthController googleAuthController = Get.put(GoogleAuthController());
+    
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {
@@ -39,16 +43,12 @@ class Login extends StatelessWidget {
                       // Top Section with Logo and Welcome Text
                       const LogoAuth(),
                       const SizedBox(height: 10),
-                      const Text(
-                        "Welcome Back!",
-                        style: TextStyle(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      const CustomTextTitleAuth(
+                        text: "Welcome back !",
                       ),
                       const SizedBox(height: 15),
-                      const CustomTextTitleAuth(
-                        text: '"Sign in to continue"',
+                      const CustomTextBodyAuth(
+                        text: 'Sign in to continue',
                       ),
 
                       const SizedBox(height: 40),
@@ -62,19 +62,19 @@ class Login extends StatelessWidget {
                         labeltext: "Email",
                       ),
                       const SizedBox(height: 20),
-               GetBuilder<LoginControllerImp>(
-  builder: (controller) => CustomTextFormAuth(
-    validator: (val) => validInput(val!, 8, 30, "password"),
-    controller: controller.password,
-    hinttext: "Enter Your Password",
-    labeltext: "Password",
-    iconData: Icons.lock_outline,
-    onTapIcon: () {
-      controller.showPassword();
-    },
-    obscureText: controller.isShowPassword,
-  ),
-),
+                      GetBuilder<LoginControllerImp>(
+                        builder: (controller) => CustomTextFormAuth(
+                          validator: (val) => validInput(val!, 8, 30, "password"),
+                          controller: controller.password,
+                          hinttext: "Enter Your Password",
+                          labeltext: "Password",
+                          iconData: Icons.lock_outline,
+                          onTapIcon: () {
+                            controller.showPassword();
+                          },
+                          obscureText: controller.isShowPassword,
+                        ),
+                      ),
                       const SizedBox(height: 15),
 
                       // Forgot Password
@@ -111,12 +111,14 @@ class Login extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          _buildSocialButton(
+                          // Google sign in button
+                          Obx(() => _buildSocialButton(
                             AppImageAsset.googleIcon,
                             () {
-                              // Handle Google sign in
+                              googleAuthController.signInWithGoogle();
                             },
-                          ),
+                            isLoading: googleAuthController.isLoading.value,
+                          )),
                           const SizedBox(width: 20),
                           _buildSocialButton(
                             AppImageAsset.facebookIcon,
@@ -164,20 +166,29 @@ class Login extends StatelessWidget {
     );
   }
 
-  Widget _buildSocialButton(String iconPath, VoidCallback onPressed) {
+  Widget _buildSocialButton(String iconPath, VoidCallback onPressed, {bool isLoading = false}) {
     return InkWell(
-      onTap: onPressed,
+      onTap: isLoading ? null : onPressed,
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           border: Border.all(color: AppColors.inactiveIndicator),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: SvgPicture.asset(
-          iconPath,
-          height: 24,
-          width: 24,
-        ),
+        child: isLoading
+            ? const SizedBox(
+                height: 24,
+                width: 24,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: AppColors.primary,
+                ),
+              )
+            : SvgPicture.asset(
+                iconPath,
+                height: 24,
+                width: 24,
+              ),
       ),
     );
   }

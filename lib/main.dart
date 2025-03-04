@@ -8,27 +8,28 @@ import 'package:storee/core/services/services.dart';
 import 'package:storee/routes.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:async';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 // Global Supabase client instance
-final supabase = Supabase.instance.client;
-
 Future<void> main() async {
-  // Ensure Flutter bindings are initialized
   WidgetsFlutterBinding.ensureInitialized();
-  await initialServices();
+
+  // Register MyServices asynchronously before running the app
+  await Get.putAsync(() async => await MyServices().init());
+
+  // Load environment variables
+  await dotenv.load(fileName: ".env");
 
   // Initialize Supabase
   await Supabase.initialize(
-      url: 'https://zzklwsqmodwlpboowpym.supabase.co',
-      anonKey:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp6a2x3c3Ftb2R3bHBib293cHltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk1NTQ1ODgsImV4cCI6MjA1NTEzMDU4OH0.ESdYUM-R3L2iv6QIMQuCJRwzYK5mP6_loy2OOSUW2dI',
-      debug: true);
-
-  // Initialize deep link handling
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+    debug: true,
+  );
 
   runApp(const MyApp());
 }
-
 
 
 class MyApp extends StatelessWidget {

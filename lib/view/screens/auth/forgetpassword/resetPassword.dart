@@ -1,7 +1,7 @@
 // reset_password.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:storee/controller/resetPassword_controller.dart';
+import 'package:storee/controller/auth/resetPassword_controller.dart';
 import 'package:storee/core/constants/color.dart';
 import 'package:storee/core/functions/validinput.dart';
 import 'package:storee/view/widgets/auth/CustomTextTitleAuth.dart';

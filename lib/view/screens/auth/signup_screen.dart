@@ -1,62 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/src/get_utils/get_utils.dart';
-import 'package:storee/controller/signup_controller.dart';
+import 'package:storee/controller/auth/signup_controller.dart';
 import 'package:storee/core/constants/color.dart';
 import 'package:storee/core/functions/alertexitapp.dart';
 import 'package:storee/view/widgets/auth/CustomTextTitleAuth.dart';
 import 'package:storee/view/widgets/auth/customTextBodyAuth.dart';
 import 'package:storee/view/widgets/auth/custombuttonAuth.dart';
+import 'package:storee/core/functions/validinput.dart';
+
 import 'package:storee/view/widgets/auth/customtextformauth.dart';
 
 class SignUp extends StatelessWidget {
   const SignUp({Key? key}) : super(key: key);
 
-  String? validInput(String val, int min, int max, String type) {
-    // Empty check
-    if (val.isEmpty) {
-      return "Can't be empty";
-    }
 
-    // Length validation
-    if (val.length < min) {
-      return "Can't be less than $min characters";
-    }
-    if (val.length > max) {
-      return "Can't be more than $max characters";
-    }
-
-    // Type-specific validation
-    switch (type) {
-      case "username":
-        if (!GetUtils.isUsername(val)) {
-          return "Username can only contain letters, numbers and underscore";
-        }
-        break;
-      case "email":
-        if (!GetUtils.isEmail(val)) {
-          return "Not a valid email";
-        }
-        break;
-      case "password":
-        if (!GetUtils.isLengthGreaterOrEqual(val, 8)) {
-          return "Password must be at least 8 characters";
-        }
-        if (!val.contains(RegExp(r'[A-Za-z]')) || !val.contains(RegExp(r'[0-9]'))) {
-          return "Password must contain both letters and numbers";
-        }
-        break;
-      case "phone":
-        if (!GetUtils.isPhoneNumber(val)) {
-          return "Not a valid phone number";
-        }
-        if (val.length != 8) {
-          return "Phone number must be 8 digits";
-        }
-        break;
-    }
-    return null;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +77,7 @@ class SignUp extends StatelessWidget {
                   const SizedBox(height: 20),
                   GetBuilder<SignUpControllerImp>(
                     builder: (controller) => CustomTextFormAuth(
-                      validator: (val) => validInput(val ?? '', 8, 30, "password"),
+    validator: (val) => validInput(val!, 8, 30, "password"),
                       controller: controller.password,
                       hinttext: "Enter Your Password",
                       labeltext: "Password",

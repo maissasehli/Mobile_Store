@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:get/get.dart';
-import 'package:storee/controller/verifycodesignup.dart';
+import 'package:storee/controller/auth/verifycodesignup.dart';
 import 'package:storee/core/constants/color.dart';
 import 'package:storee/view/widgets/auth/CustomTextTitleAuth.dart';
 import 'package:storee/view/widgets/auth/customTextBodyAuth.dart';

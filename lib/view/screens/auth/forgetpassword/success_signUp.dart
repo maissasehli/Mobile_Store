@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:storee/controller/successsignup_controller.dart';
+import 'package:storee/controller/auth/successsignup_controller.dart';
 import 'package:storee/core/constants/color.dart';
 
 class SuccessSignUp extends StatelessWidget {

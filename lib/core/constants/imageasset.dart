@@ -16,3 +16,5 @@ class AppImageAsset {
   static const String googleIcon = '$rootIcons/google.svg';
   static const String facebookIcon = '$rootIcons/facebook.svg';
 }
+
+

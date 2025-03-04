@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:get/get.dart';
-import 'package:storee/controller/verifycode_controller.dart';
+import 'package:storee/controller/auth/verifycode_controller.dart';
 import 'package:storee/core/constants/color.dart';
 import 'package:storee/view/widgets/auth/CustomTextTitleAuth.dart';
 import 'package:storee/view/widgets/auth/customTextBodyAuth.dart';
